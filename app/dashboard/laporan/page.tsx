@@ -1,15 +1,14 @@
 import db from "@/utils/db";
 import LaporanPengumpulanClient from "@/components/laporan/LaporanPengumpulan";
+import type { BayarZakat } from "@prisma/client";
+import type { Muzakki } from "@/lib/types"; // atau lokasi tipe Muzakki-mu
 
+type BayarZakatWithMuzakki = BayarZakat & { muzakki: Muzakki };
 export default async function LaporanPengumpulanPage() {
   // Fetch all bayar zakat data with related muzakki
-  const bayarZakatList = await db.bayarZakat.findMany({
-    include: {
-      muzakki: true,
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
+  const bayarZakatList: BayarZakatWithMuzakki[] = await db.bayarZakat.findMany({
+    include: { muzakki: true },
+    orderBy: { createdAt: "desc" },
   });
 
   // Calculate total muzakki (unique muzakki who paid zakat)
