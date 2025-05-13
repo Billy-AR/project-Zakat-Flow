@@ -8,19 +8,20 @@ import { Download } from "lucide-react";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 import { formatRupiah } from "@/lib/utils";
-import { JenisBayar } from "@prisma/client";
 
+// 1. Definisi tipe data untuk setiap baris daftar bayar zakat.
+//    Semua Date sudah di-serialize jadi string.
 export interface BayarZakatListItem {
   id: string;
   muzakkiId: string;
   nama_KK: string;
   jumlah_tanggungan: number;
-  jenis_bayar: JenisBayar;
+  jenis_bayar: "BERAS" | "UANG";
   jumlah_tanggunganYangDibayar: number;
   bayar_beras: number | null;
   bayar_uang: number | null;
-  createdAt: string; // sudah di-serialize
-  updatedAt: string; // sudah di-serialize
+  createdAt: string;
+  updatedAt: string;
   muzakki: {
     id: string;
     nama_muzakki: string;
@@ -43,6 +44,7 @@ export default function LaporanPengumpulanClient({ totalMuzakki, totalJiwa, tota
   const [isExporting, setIsExporting] = useState(false);
   const [dateNow, setDateNow] = useState("");
 
+  // Set tanggal hari ini dalam format lokal
   useEffect(() => {
     setDateNow(
       new Date().toLocaleDateString("id-ID", {
@@ -53,6 +55,7 @@ export default function LaporanPengumpulanClient({ totalMuzakki, totalJiwa, tota
     );
   }, []);
 
+  // Handler ekspor PDF
   const handleExport = () => {
     setIsExporting(true);
     try {
@@ -77,20 +80,22 @@ export default function LaporanPengumpulanClient({ totalMuzakki, totalJiwa, tota
       doc.text(`Total Beras: ${totalBeras.toFixed(2)} kg`, 14, 55);
       doc.text(`Total Uang: ${formatRupiah(totalUang)}`, 14, 60);
 
-      // Tabel
+      // Siapkan data tabel
       const head = [["No.", "Nama Muzakki", "Jumlah Tanggungan", "Jenis Bayar", "Beras (kg)", "Uang (Rp)", "Tanggal"]];
       const body = bayarZakatList.map((item, i) => [
         i + 1,
         item.muzakki.nama_muzakki,
         item.jumlah_tanggungan,
-        item.jenis_bayar === "BERAS" ? "Beras" : "Uang",
+        item.jenis_bayar,
         item.jenis_bayar === "BERAS" && item.bayar_beras != null ? item.bayar_beras.toFixed(2) : "-",
         item.jenis_bayar === "UANG" && item.bayar_uang != null ? formatRupiah(item.bayar_uang).replace("Rp", "") : "-",
         new Date(item.createdAt).toLocaleDateString("id-ID"),
       ]);
 
+      // Tambahkan baris total
       body.push(["", "TOTAL", totalJiwa, "", totalBeras.toFixed(2), formatRupiah(totalUang).replace("Rp", ""), ""]);
 
+      // Render tabel
       autoTable(doc, {
         head,
         body,
@@ -104,14 +109,13 @@ export default function LaporanPengumpulanClient({ totalMuzakki, totalJiwa, tota
 
       // Footer
       doc.setFontSize(10);
-      doc.text(`© ${new Date().getFullYear()} Aplikasi Zakat Fitrah`, W / 2, H - 10, {
-        align: "center",
-      });
+      doc.text(`© ${new Date().getFullYear()} Aplikasi Zakat Fitrah`, W / 2, H - 10, { align: "center" });
 
+      // Simpan file
       doc.save("laporan-pengumpulan-zakat.pdf");
-    } catch (e) {
-      console.error(e);
-      alert("Gagal mengekspor PDF: " + (e instanceof Error ? e.message : String(e)));
+    } catch (error) {
+      console.error("Error eksport PDF:", error);
+      alert("Gagal mengekspor PDF: " + (error instanceof Error ? error.message : String(error)));
     } finally {
       setIsExporting(false);
     }
@@ -119,7 +123,7 @@ export default function LaporanPengumpulanClient({ totalMuzakki, totalJiwa, tota
 
   return (
     <div className="container mx-auto py-6">
-      {/* Header & Tombol */}
+      {/* Header & Tombol Ekspor */}
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Laporan Pengumpulan Zakat Fitrah</h1>
         <Button onClick={handleExport} disabled={isExporting}>
@@ -128,7 +132,7 @@ export default function LaporanPengumpulanClient({ totalMuzakki, totalJiwa, tota
         </Button>
       </div>
 
-      {/* Ringkasan */}
+      {/* Ringkasan dalam Card */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <Card>
           <CardHeader className="pb-2">
@@ -164,7 +168,7 @@ export default function LaporanPengumpulanClient({ totalMuzakki, totalJiwa, tota
         </Card>
       </div>
 
-      {/* Tabel Detail */}
+      {/* Tabel Detail Pengumpulan */}
       <div className="bg-white p-6 rounded-lg shadow-md overflow-x-auto">
         <h2 className="text-xl font-bold mb-4">Detail Pengumpulan Zakat</h2>
         <table className="w-full border-collapse">
@@ -183,7 +187,7 @@ export default function LaporanPengumpulanClient({ totalMuzakki, totalJiwa, tota
             {bayarZakatList.length === 0 ? (
               <tr>
                 <td colSpan={7} className="border px-4 py-2 text-center">
-                  Belum ada data
+                  Belum ada data pengumpulan zakat
                 </td>
               </tr>
             ) : (
@@ -199,6 +203,7 @@ export default function LaporanPengumpulanClient({ totalMuzakki, totalJiwa, tota
                 </tr>
               ))
             )}
+            {/* Baris Total Footer */}
             <tr className="bg-gray-100 font-bold">
               <td className="border px-4 py-2" colSpan={2}>
                 TOTAL
