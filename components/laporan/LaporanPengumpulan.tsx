@@ -1,3 +1,4 @@
+// components/laporan/LaporanPengumpulan.tsx
 "use client";
 
 import { useState, useEffect } from "react";
@@ -7,14 +8,35 @@ import { Download } from "lucide-react";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 import { formatRupiah } from "@/lib/utils";
-import { BayarZakat, Muzakki } from "@/lib/types";
+import { JenisBayar } from "@prisma/client";
+
+export interface BayarZakatListItem {
+  id: string;
+  muzakkiId: string;
+  nama_KK: string;
+  jumlah_tanggungan: number;
+  jenis_bayar: JenisBayar;
+  jumlah_tanggunganYangDibayar: number;
+  bayar_beras: number | null;
+  bayar_uang: number | null;
+  createdAt: string; // sudah di-serialize
+  updatedAt: string; // sudah di-serialize
+  muzakki: {
+    id: string;
+    nama_muzakki: string;
+    jumlah_tanggungan: number;
+    keterangan: string | null;
+    createdAt: string;
+    updatedAt: string;
+  };
+}
 
 interface LaporanPengumpulanProps {
   totalMuzakki: number;
   totalJiwa: number;
   totalBeras: number;
   totalUang: number;
-  bayarZakatList: (BayarZakat & { muzakki: Muzakki })[];
+  bayarZakatList: BayarZakatListItem[];
 }
 
 export default function LaporanPengumpulanClient({ totalMuzakki, totalJiwa, totalBeras, totalUang, bayarZakatList }: LaporanPengumpulanProps) {
@@ -22,9 +44,8 @@ export default function LaporanPengumpulanClient({ totalMuzakki, totalJiwa, tota
   const [dateNow, setDateNow] = useState("");
 
   useEffect(() => {
-    const now = new Date();
     setDateNow(
-      now.toLocaleDateString("id-ID", {
+      new Date().toLocaleDateString("id-ID", {
         day: "numeric",
         month: "long",
         year: "numeric",
@@ -35,7 +56,6 @@ export default function LaporanPengumpulanClient({ totalMuzakki, totalJiwa, tota
   const handleExport = () => {
     setIsExporting(true);
     try {
-      // Inisialisasi PDF dengan ukuran A4
       const doc = new jsPDF();
       const W = doc.internal.pageSize.getWidth();
       const H = doc.internal.pageSize.getHeight();
@@ -57,8 +77,8 @@ export default function LaporanPengumpulanClient({ totalMuzakki, totalJiwa, tota
       doc.text(`Total Beras: ${totalBeras.toFixed(2)} kg`, 14, 55);
       doc.text(`Total Uang: ${formatRupiah(totalUang)}`, 14, 60);
 
-      // Persiapan tabel
-      const head = [["No.", "Nama Muzakki", "Jumlah Tanggungan", "Jenis Bayar", "Beras (kg)", "Uang (Rp)"]];
+      // Tabel
+      const head = [["No.", "Nama Muzakki", "Jumlah Tanggungan", "Jenis Bayar", "Beras (kg)", "Uang (Rp)", "Tanggal"]];
       const body = bayarZakatList.map((item, i) => [
         i + 1,
         item.muzakki.nama_muzakki,
@@ -66,32 +86,20 @@ export default function LaporanPengumpulanClient({ totalMuzakki, totalJiwa, tota
         item.jenis_bayar === "BERAS" ? "Beras" : "Uang",
         item.jenis_bayar === "BERAS" && item.bayar_beras != null ? item.bayar_beras.toFixed(2) : "-",
         item.jenis_bayar === "UANG" && item.bayar_uang != null ? formatRupiah(item.bayar_uang).replace("Rp", "") : "-",
+        new Date(item.createdAt).toLocaleDateString("id-ID"),
       ]);
 
-      // Tambahkan baris total
-      body.push(["", "TOTAL", totalJiwa, "", totalBeras.toFixed(2), formatRupiah(totalUang).replace("Rp", "")]);
+      body.push(["", "TOTAL", totalJiwa, "", totalBeras.toFixed(2), formatRupiah(totalUang).replace("Rp", ""), ""]);
 
-      // Generate tabel
       autoTable(doc, {
-        head: head,
-        body: body,
+        head,
+        body,
         startY: 75,
         theme: "grid",
-        styles: {
-          fontSize: 9,
-          cellPadding: 3,
-        },
-        headStyles: {
-          fillColor: [220, 220, 220],
-          textColor: [0, 0, 0],
-          fontStyle: "bold",
-        },
-        footStyles: {
-          fontStyle: "bold",
-        },
-        alternateRowStyles: {
-          fillColor: [245, 245, 245],
-        },
+        styles: { fontSize: 9, cellPadding: 3 },
+        headStyles: { fillColor: [220, 220, 220], textColor: [0, 0, 0], fontStyle: "bold" },
+        footStyles: { fontStyle: "bold" },
+        alternateRowStyles: { fillColor: [245, 245, 245] },
       });
 
       // Footer
@@ -100,11 +108,10 @@ export default function LaporanPengumpulanClient({ totalMuzakki, totalJiwa, tota
         align: "center",
       });
 
-      // Simpan PDF
       doc.save("laporan-pengumpulan-zakat.pdf");
     } catch (e) {
-      console.error("Error saat mengekspor PDF:", e);
-      alert("Gagal mengekspor PDF. Error: " + (e instanceof Error ? e.message : String(e)));
+      console.error(e);
+      alert("Gagal mengekspor PDF: " + (e instanceof Error ? e.message : String(e)));
     } finally {
       setIsExporting(false);
     }
@@ -112,7 +119,7 @@ export default function LaporanPengumpulanClient({ totalMuzakki, totalJiwa, tota
 
   return (
     <div className="container mx-auto py-6">
-      {/* Header & tombol ekspor */}
+      {/* Header & Tombol */}
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Laporan Pengumpulan Zakat Fitrah</h1>
         <Button onClick={handleExport} disabled={isExporting}>
@@ -121,7 +128,7 @@ export default function LaporanPengumpulanClient({ totalMuzakki, totalJiwa, tota
         </Button>
       </div>
 
-      {/* Ringkasan kartu */}
+      {/* Ringkasan */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <Card>
           <CardHeader className="pb-2">
@@ -157,36 +164,38 @@ export default function LaporanPengumpulanClient({ totalMuzakki, totalJiwa, tota
         </Card>
       </div>
 
-      {/* Tabel detail */}
+      {/* Tabel Detail */}
       <div className="bg-white p-6 rounded-lg shadow-md overflow-x-auto">
         <h2 className="text-xl font-bold mb-4">Detail Pengumpulan Zakat</h2>
         <table className="w-full border-collapse">
           <thead>
             <tr className="bg-gray-100">
-              <th className="border px-4 py-2 text-left">No.</th>
-              <th className="border px-4 py-2 text-left">Nama Muzakki</th>
-              <th className="border px-4 py-2 text-left">Jumlah Tanggungan</th>
-              <th className="border px-4 py-2 text-left">Jenis Bayar</th>
-              <th className="border px-4 py-2 text-left">Beras (kg)</th>
-              <th className="border px-4 py-2 text-left">Uang (Rp)</th>
+              <th className="border px-4 py-2">No.</th>
+              <th className="border px-4 py-2">Nama Muzakki</th>
+              <th className="border px-4 py-2">Jumlah Tanggungan</th>
+              <th className="border px-4 py-2">Jenis Bayar</th>
+              <th className="border px-4 py-2">Beras (kg)</th>
+              <th className="border px-4 py-2">Uang (Rp)</th>
+              <th className="border px-4 py-2">Tanggal</th>
             </tr>
           </thead>
           <tbody>
             {bayarZakatList.length === 0 ? (
               <tr>
-                <td colSpan={6} className="border px-4 py-2 text-center">
-                  Belum ada data pengumpulan zakat
+                <td colSpan={7} className="border px-4 py-2 text-center">
+                  Belum ada data
                 </td>
               </tr>
             ) : (
               bayarZakatList.map((item, i) => (
                 <tr key={item.id} className={i % 2 === 0 ? "bg-white" : "bg-gray-50"}>
-                  <td className="border px-4 py-2">{i + 1}</td>
+                  <td className="border px-4 py-2 text-center">{i + 1}</td>
                   <td className="border px-4 py-2">{item.muzakki.nama_muzakki}</td>
                   <td className="border px-4 py-2 text-center">{item.jumlah_tanggungan}</td>
-                  <td className="border px-4 py-2">{item.jenis_bayar === "BERAS" ? "Beras" : "Uang"}</td>
-                  <td className="border px-4 py-2">{item.jenis_bayar === "BERAS" && item.bayar_beras != null ? item.bayar_beras.toFixed(2) : "-"}</td>
-                  <td className="border px-4 py-2">{item.jenis_bayar === "UANG" && item.bayar_uang != null ? formatRupiah(item.bayar_uang) : "-"}</td>
+                  <td className="border px-4 py-2">{item.jenis_bayar}</td>
+                  <td className="border px-4 py-2 text-right">{item.jenis_bayar === "BERAS" && item.bayar_beras != null ? item.bayar_beras.toFixed(2) : "-"}</td>
+                  <td className="border px-4 py-2 text-right">{item.jenis_bayar === "UANG" && item.bayar_uang != null ? formatRupiah(item.bayar_uang) : "-"}</td>
+                  <td className="border px-4 py-2">{new Date(item.createdAt).toLocaleDateString("id-ID")}</td>
                 </tr>
               ))
             )}
@@ -196,8 +205,9 @@ export default function LaporanPengumpulanClient({ totalMuzakki, totalJiwa, tota
               </td>
               <td className="border px-4 py-2 text-center">{totalJiwa}</td>
               <td className="border px-4 py-2"></td>
-              <td className="border px-4 py-2">{totalBeras.toFixed(2)} kg</td>
-              <td className="border px-4 py-2">{formatRupiah(totalUang)}</td>
+              <td className="border px-4 py-2 text-right">{totalBeras.toFixed(2)} kg</td>
+              <td className="border px-4 py-2 text-right">{formatRupiah(totalUang)}</td>
+              <td className="border px-4 py-2"></td>
             </tr>
           </tbody>
         </table>
