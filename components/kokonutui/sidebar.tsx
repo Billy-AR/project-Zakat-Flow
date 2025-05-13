@@ -1,6 +1,6 @@
 "use client";
 
-import { BarChart2, Receipt, Building2, CreditCard, Folder, Wallet, Users2, Shield, MessagesSquare, Video, Settings, HelpCircle, Menu } from "lucide-react";
+import { BarChart2, Building2, Folder, Settings, HelpCircle, Menu } from "lucide-react";
 
 import { Home } from "lucide-react";
 import Link from "next/link";

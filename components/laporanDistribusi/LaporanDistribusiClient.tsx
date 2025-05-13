@@ -24,6 +24,14 @@ interface LaporanDistribusiProps {
   totalBerasLainnya: number;
 }
 
+declare module "jspdf" {
+  interface jsPDF {
+    lastAutoTable: {
+      finalY: number;
+    };
+  }
+}
+
 export default function LaporanDistribusiClient({ distribusiWarga, distribusiLainnya, totalBerasWarga, totalBerasLainnya }: LaporanDistribusiProps) {
   const [isExporting, setIsExporting] = useState(false);
   const [activeTab, setActiveTab] = useState("warga");
@@ -107,7 +115,7 @@ export default function LaporanDistribusiClient({ distribusiWarga, distribusiLai
 
       // --- BAGIAN B: DISTRIBUSI KE MUSTAHIK LAINNYA ---
       // Dapatkan posisi Y setelah tabel pertama
-      const finalY = (doc as any).lastAutoTable.finalY + 15;
+      const finalY = doc.lastAutoTable.finalY + 15;
 
       doc.setFontSize(12);
       doc.setFont("helvetica", "bold");
@@ -145,7 +153,7 @@ export default function LaporanDistribusiClient({ distribusiWarga, distribusiLai
 
       // --- RINGKASAN DISTRIBUSI ---
       // Dapatkan posisi Y setelah tabel kedua
-      const finalY2 = (doc as any).lastAutoTable.finalY + 15;
+      const finalY2 = doc.lastAutoTable.finalY + 15;
 
       doc.setFontSize(12);
       doc.setFont("helvetica", "bold");

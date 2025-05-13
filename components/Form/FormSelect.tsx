@@ -19,7 +19,7 @@ interface FormSelectProps {
   className?: string;
 }
 
-export default function FormSelect({ name, label, placeholder, selectLabel, items, required = false, defaultValue, className }: FormSelectProps) {
+export default function FormSelect({ name, label, placeholder, items, required = false, defaultValue, className }: FormSelectProps) {
   return (
     <div className={className}>
       <Label htmlFor={name} className="mb-2 block">

@@ -1,35 +1,20 @@
-import { cn } from "@/lib/utils"
-import {
-  ArrowUpRight,
-  ArrowDownLeft,
-  Wallet,
-  ShoppingCart,
-  CreditCard,
-  type LucideIcon,
-  ArrowRight,
-} from "lucide-react"
+import { cn } from "@/lib/utils";
+import { ArrowUpRight, ArrowDownLeft, Wallet, ShoppingCart, CreditCard, type LucideIcon, ArrowRight } from "lucide-react";
 
 interface Transaction {
-  id: string
-  title: string
-  amount: string
-  type: "incoming" | "outgoing"
-  category: string
-  icon: LucideIcon
-  timestamp: string
-  status: "completed" | "pending" | "failed"
+  id: string;
+  title: string;
+  amount: string;
+  type: "incoming" | "outgoing";
+  category: string;
+  icon: LucideIcon;
+  timestamp: string;
+  status: "completed" | "pending" | "failed";
 }
 
 interface List02Props {
-  transactions?: Transaction[]
-  className?: string
-}
-
-const categoryStyles = {
-  shopping: "bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100",
-  food: "bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100",
-  transport: "bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100",
-  entertainment: "bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100",
+  transactions?: Transaction[];
+  className?: string;
 }
 
 const TRANSACTIONS: Transaction[] = [
@@ -93,19 +78,11 @@ const TRANSACTIONS: Transaction[] = [
     timestamp: "Yesterday",
     status: "pending",
   },
-]
+];
 
 export default function List02({ transactions = TRANSACTIONS, className }: List02Props) {
   return (
-    <div
-      className={cn(
-        "w-full max-w-xl mx-auto",
-        "bg-white dark:bg-zinc-900/70",
-        "border border-zinc-100 dark:border-zinc-800",
-        "rounded-xl shadow-sm backdrop-blur-xl",
-        className,
-      )}
-    >
+    <div className={cn("w-full max-w-xl mx-auto", "bg-white dark:bg-zinc-900/70", "border border-zinc-100 dark:border-zinc-800", "rounded-xl shadow-sm backdrop-blur-xl", className)}>
       <div className="p-4">
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
@@ -117,22 +94,8 @@ export default function List02({ transactions = TRANSACTIONS, className }: List0
 
         <div className="space-y-1">
           {transactions.map((transaction) => (
-            <div
-              key={transaction.id}
-              className={cn(
-                "group flex items-center gap-3",
-                "p-2 rounded-lg",
-                "hover:bg-zinc-100 dark:hover:bg-zinc-800/50",
-                "transition-all duration-200",
-              )}
-            >
-              <div
-                className={cn(
-                  "p-2 rounded-lg",
-                  "bg-zinc-100 dark:bg-zinc-800",
-                  "border border-zinc-200 dark:border-zinc-700",
-                )}
-              >
+            <div key={transaction.id} className={cn("group flex items-center gap-3", "p-2 rounded-lg", "hover:bg-zinc-100 dark:hover:bg-zinc-800/50", "transition-all duration-200")}>
+              <div className={cn("p-2 rounded-lg", "bg-zinc-100 dark:bg-zinc-800", "border border-zinc-200 dark:border-zinc-700")}>
                 <transaction.icon className="w-4 h-4 text-zinc-900 dark:text-zinc-100" />
               </div>
 
@@ -143,22 +106,11 @@ export default function List02({ transactions = TRANSACTIONS, className }: List0
                 </div>
 
                 <div className="flex items-center gap-1.5 pl-3">
-                  <span
-                    className={cn(
-                      "text-xs font-medium",
-                      transaction.type === "incoming"
-                        ? "text-emerald-600 dark:text-emerald-400"
-                        : "text-red-600 dark:text-red-400",
-                    )}
-                  >
+                  <span className={cn("text-xs font-medium", transaction.type === "incoming" ? "text-emerald-600 dark:text-emerald-400" : "text-red-600 dark:text-red-400")}>
                     {transaction.type === "incoming" ? "+" : "-"}
                     {transaction.amount}
                   </span>
-                  {transaction.type === "incoming" ? (
-                    <ArrowDownLeft className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-                  ) : (
-                    <ArrowUpRight className="w-3.5 h-3.5 text-red-600 dark:text-red-400" />
-                  )}
+                  {transaction.type === "incoming" ? <ArrowDownLeft className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" /> : <ArrowUpRight className="w-3.5 h-3.5 text-red-600 dark:text-red-400" />}
                 </div>
               </div>
             </div>
@@ -184,7 +136,7 @@ export default function List02({ transactions = TRANSACTIONS, className }: List0
             "active:translate-y-0",
             "focus:outline-none focus:ring-2",
             "focus:ring-zinc-500 dark:focus:ring-zinc-400",
-            "focus:ring-offset-2 dark:focus:ring-offset-zinc-900",
+            "focus:ring-offset-2 dark:focus:ring-offset-zinc-900"
           )}
         >
           <span>View All Transactions</span>
@@ -192,5 +144,5 @@ export default function List02({ transactions = TRANSACTIONS, className }: List0
         </button>
       </div>
     </div>
-  )
+  );
 }
