@@ -1,9 +1,10 @@
 import db from "@/utils/db";
 import LaporanPengumpulanClient from "@/components/laporan/LaporanPengumpulan";
-import type { BayarZakat } from "@prisma/client";
-import type { Muzakki } from "@/lib/types"; // atau lokasi tipe Muzakki-mu
+import { Prisma } from "@prisma/client";
 
-type BayarZakatWithMuzakki = BayarZakat & { muzakki: Muzakki };
+type BayarZakatWithMuzakki = Prisma.BayarZakatGetPayload<{
+  include: { muzakki: true };
+}>;
 export default async function LaporanPengumpulanPage() {
   // Fetch all bayar zakat data with related muzakki
   const bayarZakatList: BayarZakatWithMuzakki[] = await db.bayarZakat.findMany({
