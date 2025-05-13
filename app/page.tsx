@@ -82,7 +82,7 @@ export default function AuthPage() {
                   </CardContent>
                   <CardFooter className="flex flex-col space-y-4 pt-0">
                     <div className="text-sm text-slate-600 text-center">
-                      "Harta tidak akan berkurang karena sedekah"
+                      &ldquo;Harta tidak akan berkurang karena sedekah&rdquo;
                       <div className="text-xs mt-1 text-slate-500">- HR. Tirmidzi</div>
                     </div>
                   </CardFooter>
