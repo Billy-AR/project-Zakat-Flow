@@ -1,0 +1,98 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+
+model User {
+  id       String   @id @default(cuid())
+  email    String   @unique
+  username String   @unique
+  password String
+  role     String   @default("admin")
+  name     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Muzakki {
+  id                 String     @id @default(cuid())
+  nama_muzakki       String
+  jumlah_tanggungan  Int
+  keterangan         String?
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
+  
+  // Relations
+  bayarzakat         BayarZakat[]
+  mustahik_warga     MustahikWarga[]
+}
+
+model KategoriMustahik {
+  id              String     @id @default(cuid())
+  nama_kategori   String
+  jumlah_hak      Float
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  
+  // Relations
+  mustahik_warga  MustahikWarga[]
+  mustahik_lainnya MustahikLainnya[]
+}
+
+model BayarZakat {
+  id                          String     @id @default(cuid())
+  muzakkiId                   String
+  nama_KK                     String
+  jumlah_tanggungan           Int
+  jenis_bayar                 JenisBayar
+  jumlah_tanggunganYangDibayar Int
+  bayar_beras                 Float?
+  bayar_uang                  Float?
+  createdAt                   DateTime   @default(now())
+  updatedAt                   DateTime   @updatedAt
+  
+  // Relations
+  muzakki                     Muzakki    @relation(fields: [muzakkiId], references: [id], onDelete: Cascade)
+}
+
+model MustahikWarga {
+  id              String     @id @default(cuid())
+  muzakkiId       String
+  nama            String
+  kategoriId      String
+  hak             Float
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  
+  // Relations
+  muzakki         Muzakki    @relation(fields: [muzakkiId], references: [id], onDelete: Cascade)
+  kategori        KategoriMustahik @relation(fields: [kategoriId], references: [id], onDelete: Cascade)
+}
+
+model MustahikLainnya {
+  id              String     @id @default(cuid())
+  nama            String
+  kategoriId      String
+  hak             Float
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  
+  // Relations
+  kategori        KategoriMustahik @relation(fields: [kategoriId], references: [id], onDelete: Cascade)
+}
+
+enum JenisBayar {
+  BERAS
+  UANG
+}
