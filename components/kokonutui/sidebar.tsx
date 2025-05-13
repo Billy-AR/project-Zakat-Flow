@@ -14,7 +14,7 @@ export default function Sidebar() {
     setIsMobileMenuOpen(false);
   }
 
-  function NavItem({ href, icon: Icon, children }: { href: string; icon: any; children: React.ReactNode }) {
+  function NavItem({ href, icon: Icon, children }: { href: string; icon: React.ElementType; children: React.ReactNode }) {
     return (
       <Link
         href={href}
