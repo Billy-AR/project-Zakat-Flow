@@ -1,7 +1,6 @@
 // app/dashboard/laporan/page.tsx
 import db from "@/utils/db";
 import LaporanPengumpulanClient from "@/components/laporan/LaporanPengumpulan";
-import { JenisBayar } from "@prisma/client";
 
 export default async function LaporanPengumpulanPage() {
   // 1. Ambil data mentah dari database
@@ -23,7 +22,7 @@ export default async function LaporanPengumpulanPage() {
     muzakkiId: item.muzakkiId,
     nama_KK: item.nama_KK,
     jumlah_tanggungan: item.jumlah_tanggungan,
-    jenis_bayar: item.jenis_bayar as JenisBayar,
+    jenis_bayar: item.jenis_bayar, // langsung pakai string union
     jumlah_tanggunganYangDibayar: item.jumlah_tanggunganYangDibayar,
     bayar_beras: item.bayar_beras,
     bayar_uang: item.bayar_uang,
