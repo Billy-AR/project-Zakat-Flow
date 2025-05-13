@@ -1,0 +1,11 @@
+{
+  "build": {
+    "env": {
+      "NODE_ENV": "production"
+    },
+    "commands": {
+      "install": "npm ci && prisma generate",
+      "build": "next build"
+    }
+  }
+}
