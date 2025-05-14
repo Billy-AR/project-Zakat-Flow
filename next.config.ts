@@ -16,6 +16,7 @@ const nextConfig: NextConfig = {
         port: "", // kosong jika default 443
         pathname: "/**", // semua path di bawah hostname ini
       },
+      { protocol: "https", hostname: "img.clerk.com" },
     ],
   },
 };

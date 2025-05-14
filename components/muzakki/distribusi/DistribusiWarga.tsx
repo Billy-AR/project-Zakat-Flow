@@ -11,7 +11,7 @@ import FormInput from "@/components/Form/FormInput";
 import FormNumber from "@/components/Form/FormNumber";
 import FormSelect from "@/components/Form/FormSelect";
 import { createMustahikWargaAction, updateMustahikWargaAction, deleteMustahikWargaAction } from "@/utils/actions";
-import { MustahikWarga, Muzakki, KategoriMustahik } from "@/lib/types";
+import { MustahikWarga, Muzakki, KategoriMustahik, statusMessage } from "@/lib/types";
 
 interface MustahikWargaPageProps {
   mustahikWargaList: (MustahikWarga & {
@@ -60,6 +60,32 @@ export default function MustahikWargaClient({ mustahikWargaList, muzakkiList, ka
     valueItem: kategori.id,
   }));
 
+  // Function to handle form submission with validation
+  const handleFormSubmit = async (_: any, formData: FormData): Promise<{ message: string; statusMessage: statusMessage }> => {
+    // Ensure form fields have values before submission
+    const muzakkiId = formData.get("muzakkiId");
+    const nama = formData.get("nama");
+    const kategoriId = formData.get("kategoriId");
+    const hakValue = formData.get("hak");
+
+    // Validate required fields
+    if (!muzakkiId || !nama || !kategoriId || !hakValue) {
+      // Don't submit if any required field is missing
+      return { message: "Semua field harus diisi dengan benar", statusMessage: "error" };
+    }
+
+    // Ensure hak is a valid number
+    const hak = parseFloat(hakValue as string);
+    if (isNaN(hak)) {
+      return { message: "Jumlah hak harus berupa angka", statusMessage: "error" };
+    }
+
+    // If validation passes, submit the form
+    const result = await createMustahikWargaAction("", formData);
+    setIsAddOpen(false);
+    return result;
+  };
+
   return (
     <div className="container mx-auto py-6">
       <div className="flex justify-between items-center mb-6">
@@ -76,14 +102,7 @@ export default function MustahikWargaClient({ mustahikWargaList, muzakkiList, ka
               <DialogTitle>Tambah Mustahik Warga</DialogTitle>
               <DialogDescription>Isi formulir berikut untuk menambahkan data mustahik warga.</DialogDescription>
             </DialogHeader>
-            <FormContainer
-              action={(formData) => {
-                const result = createMustahikWargaAction("", formData);
-                setIsAddOpen(false);
-                return result;
-              }}
-              submitBtn
-            >
+            <FormContainer action={handleFormSubmit} submitBtn>
               <div className="space-y-4 py-4">
                 <FormSelect name="muzakkiId" label="Pilih Muzakki/Warga" placeholder="Pilih warga sebagai mustahik" selectLabel="Muzakki/Warga" items={muzakkiOptions} required />
 
@@ -91,7 +110,7 @@ export default function MustahikWargaClient({ mustahikWargaList, muzakkiList, ka
 
                 <FormSelect name="kategoriId" label="Kategori Mustahik" placeholder="Pilih kategori mustahik" selectLabel="Kategori" items={kategoriOptions} required />
 
-                <FormNumber name="hak" label="Jumlah Hak (Kg)" placeholder="Masukkan jumlah hak dalam kg" required min={0} step={0.1} />
+                <FormNumber name="hak" label="Jumlah Hak (Kg)" placeholder="Masukkan jumlah hak dalam kg" required min={0} step={0.1} defaultValue={0} />
               </div>
             </FormContainer>
           </DialogContent>

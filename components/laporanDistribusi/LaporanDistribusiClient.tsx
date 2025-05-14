@@ -257,45 +257,45 @@ export default function LaporanDistribusiClient({ distribusiWarga, distribusiLai
         </TabsList>
 
         <TabsContent value="warga">
-          <div className="bg-white p-6 rounded-lg shadow-md">
+          <div className="border-2 p-6 rounded-lg shadow-md dark:bg-muted">
             <h2 className="text-xl font-bold mb-4">A. Distribusi ke Mustahik Warga</h2>
 
             <div className="overflow-x-auto">
               <table className="w-full border-collapse">
                 <thead>
-                  <tr className="bg-gray-100">
-                    <th className="border border-gray-200 px-4 py-2 text-left">No.</th>
-                    <th className="border border-gray-200 px-4 py-2 text-left">Kategori Mustahik</th>
-                    <th className="border border-gray-200 px-4 py-2 text-left">Hak Beras (kg)</th>
-                    <th className="border border-gray-200 px-4 py-2 text-left">Jumlah KK</th>
-                    <th className="border border-gray-200 px-4 py-2 text-left">Total Beras (kg)</th>
+                  <tr className="bg-gray-100 dark:bg-muted">
+                    <th className="border px-4 py-2 text-left">No.</th>
+                    <th className="border px-4 py-2 text-left">Kategori Mustahik</th>
+                    <th className="border  px-4 py-2 text-left">Hak Beras (kg)</th>
+                    <th className="border px-4 py-2 text-left">Jumlah KK</th>
+                    <th className="border  px-4 py-2 text-left">Total Beras (kg)</th>
                   </tr>
                 </thead>
                 <tbody>
                   {distribusiWarga.length === 0 ? (
                     <tr>
-                      <td colSpan={5} className="border border-gray-200 px-4 py-2 text-center">
+                      <td colSpan={5} className="border border-muted px-4 py-2 text-center">
                         Belum ada data distribusi untuk mustahik warga
                       </td>
                     </tr>
                   ) : (
                     distribusiWarga.map((item, index) => (
-                      <tr key={item.kategoriId} className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}>
-                        <td className="border border-gray-200 px-4 py-2">{index + 1}</td>
-                        <td className="border border-gray-200 px-4 py-2">{item.namaKategori}</td>
-                        <td className="border border-gray-200 px-4 py-2">{item.hakBeras.toFixed(2)}</td>
-                        <td className="border border-gray-200 px-4 py-2 text-center">{item.jumlahMustahik}</td>
-                        <td className="border border-gray-200 px-4 py-2">{item.totalBeras.toFixed(2)}</td>
+                      <tr key={item.kategoriId} className={index % 2 === 0 ? "bg-white dark:bg-muted" : "bg-gray-50 dark:bg-muted"}>
+                        <td className="border  px-4 py-2">{index + 1}</td>
+                        <td className="border  px-4 py-2">{item.namaKategori}</td>
+                        <td className="border  px-4 py-2">{item.hakBeras.toFixed(2)}</td>
+                        <td className="border  px-4 py-2 text-center">{item.jumlahMustahik}</td>
+                        <td className="border  px-4 py-2">{item.totalBeras.toFixed(2)}</td>
                       </tr>
                     ))
                   )}
                   {distribusiWarga.length > 0 && (
-                    <tr className="bg-gray-100 font-bold">
-                      <td className="border border-gray-200 px-4 py-2" colSpan={3}>
+                    <tr className="bg-gray-100 font-bold dark:bg-muted">
+                      <td className="border  px-4 py-2" colSpan={3}>
                         TOTAL
                       </td>
-                      <td className="border border-gray-200 px-4 py-2 text-center">{distribusiWarga.reduce((sum, item) => sum + item.jumlahMustahik, 0)}</td>
-                      <td className="border border-gray-200 px-4 py-2">{totalBerasWarga.toFixed(2)} kg</td>
+                      <td className="border  px-4 py-2 text-center">{distribusiWarga.reduce((sum, item) => sum + item.jumlahMustahik, 0)}</td>
+                      <td className="border  px-4 py-2">{totalBerasWarga.toFixed(2)} kg</td>
                     </tr>
                   )}
                 </tbody>
@@ -305,45 +305,45 @@ export default function LaporanDistribusiClient({ distribusiWarga, distribusiLai
         </TabsContent>
 
         <TabsContent value="lainnya">
-          <div className="bg-white p-6 rounded-lg shadow-md">
+          <div className="border-2 dark:bg-muted p-6 rounded-lg shadow-md">
             <h2 className="text-xl font-bold mb-4">B. Distribusi ke Mustahik Lainnya</h2>
 
             <div className="overflow-x-auto">
               <table className="w-full border-collapse">
                 <thead>
-                  <tr className="bg-gray-100">
-                    <th className="border border-gray-200 px-4 py-2 text-left">No.</th>
-                    <th className="border border-gray-200 px-4 py-2 text-left">Kategori Mustahik</th>
-                    <th className="border border-gray-200 px-4 py-2 text-left">Hak Beras (kg)</th>
-                    <th className="border border-gray-200 px-4 py-2 text-left">Jumlah KK</th>
-                    <th className="border border-gray-200 px-4 py-2 text-left">Total Beras (kg)</th>
+                  <tr className="bg-gray-100 dark:bg-muted">
+                    <th className="border  px-4 py-2 text-left">No.</th>
+                    <th className="border  px-4 py-2 text-left">Kategori Mustahik</th>
+                    <th className="border  px-4 py-2 text-left">Hak Beras (kg)</th>
+                    <th className="border  px-4 py-2 text-left">Jumlah KK</th>
+                    <th className="border  px-4 py-2 text-left">Total Beras (kg)</th>
                   </tr>
                 </thead>
                 <tbody>
                   {distribusiLainnya.length === 0 ? (
                     <tr>
-                      <td colSpan={5} className="border border-gray-200 px-4 py-2 text-center">
+                      <td colSpan={5} className="border-2 px-4 py-2 text-center">
                         Belum ada data distribusi untuk mustahik lainnya
                       </td>
                     </tr>
                   ) : (
                     distribusiLainnya.map((item, index) => (
-                      <tr key={item.kategoriId} className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}>
-                        <td className="border border-gray-200 px-4 py-2">{index + 1}</td>
-                        <td className="border border-gray-200 px-4 py-2">{item.namaKategori}</td>
-                        <td className="border border-gray-200 px-4 py-2">{item.hakBeras.toFixed(2)}</td>
-                        <td className="border border-gray-200 px-4 py-2 text-center">{item.jumlahMustahik}</td>
-                        <td className="border border-gray-200 px-4 py-2">{item.totalBeras.toFixed(2)}</td>
+                      <tr key={item.kategoriId} className={index % 2 === 0 ? "bg-white dark:bg-muted" : "bg-gray-50 dark:bg-muted"}>
+                        <td className="border  px-4 py-2">{index + 1}</td>
+                        <td className="border  px-4 py-2">{item.namaKategori}</td>
+                        <td className="border  px-4 py-2">{item.hakBeras.toFixed(2)}</td>
+                        <td className="border  px-4 py-2 text-center">{item.jumlahMustahik}</td>
+                        <td className="border  px-4 py-2">{item.totalBeras.toFixed(2)}</td>
                       </tr>
                     ))
                   )}
                   {distribusiLainnya.length > 0 && (
-                    <tr className="bg-gray-100 font-bold">
-                      <td className="border border-gray-200 px-4 py-2" colSpan={3}>
+                    <tr className="bg-gray-100 dark:bg-muted font-bold">
+                      <td className="border-2 px-4 py-2" colSpan={3}>
                         TOTAL
                       </td>
-                      <td className="border border-gray-200 px-4 py-2 text-center">{distribusiLainnya.reduce((sum, item) => sum + item.jumlahMustahik, 0)}</td>
-                      <td className="border border-gray-200 px-4 py-2">{totalBerasLainnya.toFixed(2)} kg</td>
+                      <td className="border-2 px-4 py-2 text-center">{distribusiLainnya.reduce((sum, item) => sum + item.jumlahMustahik, 0)}</td>
+                      <td className="border-2 px-4 py-2">{totalBerasLainnya.toFixed(2)} kg</td>
                     </tr>
                   )}
                 </tbody>
@@ -355,37 +355,37 @@ export default function LaporanDistribusiClient({ distribusiWarga, distribusiLai
 
       <Separator className="my-8" />
 
-      <div className="bg-white p-6 rounded-lg shadow-md">
+      <div className="border-2 dark:bg-muted p-6 rounded-lg shadow-md">
         <h2 className="text-xl font-bold mb-4">Ringkasan Distribusi Zakat Fitrah</h2>
 
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
-              <tr className="bg-gray-100">
-                <th className="border border-gray-200 px-4 py-2 text-left">Jenis Distribusi</th>
-                <th className="border border-gray-200 px-4 py-2 text-left">Jumlah KK</th>
-                <th className="border border-gray-200 px-4 py-2 text-left">Total Beras (kg)</th>
-                <th className="border border-gray-200 px-4 py-2 text-left">Persentase</th>
+              <tr className="bg-gray-100 dark:bg-muted">
+                <th className="border  px-4 py-2 text-left">Jenis Distribusi</th>
+                <th className="border  px-4 py-2 text-left">Jumlah KK</th>
+                <th className="border  px-4 py-2 text-left">Total Beras (kg)</th>
+                <th className="border  px-4 py-2 text-left">Persentase</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td className="border border-gray-200 px-4 py-2">Distribusi ke Mustahik Warga</td>
-                <td className="border border-gray-200 px-4 py-2 text-center">{distribusiWarga.reduce((sum, item) => sum + item.jumlahMustahik, 0)}</td>
-                <td className="border border-gray-200 px-4 py-2">{totalBerasWarga.toFixed(2)} kg</td>
-                <td className="border border-gray-200 px-4 py-2">{totalKeseluruhan > 0 ? ((totalBerasWarga / totalKeseluruhan) * 100).toFixed(2) : "0.00"}%</td>
+                <td className="border  px-4 py-2">Distribusi ke Mustahik Warga</td>
+                <td className="border px-4 py-2 text-center">{distribusiWarga.reduce((sum, item) => sum + item.jumlahMustahik, 0)}</td>
+                <td className="border  px-4 py-2">{totalBerasWarga.toFixed(2)} kg</td>
+                <td className="border  px-4 py-2">{totalKeseluruhan > 0 ? ((totalBerasWarga / totalKeseluruhan) * 100).toFixed(2) : "0.00"}%</td>
               </tr>
               <tr>
-                <td className="border border-gray-200 px-4 py-2">Distribusi ke Mustahik Lainnya</td>
-                <td className="border border-gray-200 px-4 py-2 text-center">{distribusiLainnya.reduce((sum, item) => sum + item.jumlahMustahik, 0)}</td>
-                <td className="border border-gray-200 px-4 py-2">{totalBerasLainnya.toFixed(2)} kg</td>
-                <td className="border border-gray-200 px-4 py-2">{totalKeseluruhan > 0 ? ((totalBerasLainnya / totalKeseluruhan) * 100).toFixed(2) : "0.00"}%</td>
+                <td className="border  px-4 py-2">Distribusi ke Mustahik Lainnya</td>
+                <td className="border  px-4 py-2 text-center">{distribusiLainnya.reduce((sum, item) => sum + item.jumlahMustahik, 0)}</td>
+                <td className="border  px-4 py-2">{totalBerasLainnya.toFixed(2)} kg</td>
+                <td className="border  px-4 py-2">{totalKeseluruhan > 0 ? ((totalBerasLainnya / totalKeseluruhan) * 100).toFixed(2) : "0.00"}%</td>
               </tr>
-              <tr className="bg-gray-100 font-bold">
-                <td className="border border-gray-200 px-4 py-2">TOTAL</td>
-                <td className="border border-gray-200 px-4 py-2 text-center">{distribusiWarga.reduce((sum, item) => sum + item.jumlahMustahik, 0) + distribusiLainnya.reduce((sum, item) => sum + item.jumlahMustahik, 0)}</td>
-                <td className="border border-gray-200 px-4 py-2">{totalKeseluruhan.toFixed(2)} kg</td>
-                <td className="border border-gray-200 px-4 py-2">100.00%</td>
+              <tr className="dark:bg-muted font-bold">
+                <td className="border px-4 py-2">TOTAL</td>
+                <td className="border  px-4 py-2 text-center">{distribusiWarga.reduce((sum, item) => sum + item.jumlahMustahik, 0) + distribusiLainnya.reduce((sum, item) => sum + item.jumlahMustahik, 0)}</td>
+                <td className="border  px-4 py-2">{totalKeseluruhan.toFixed(2)} kg</td>
+                <td className="border  px-4 py-2">100.00%</td>
               </tr>
             </tbody>
           </table>

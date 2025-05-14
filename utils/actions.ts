@@ -555,7 +555,7 @@ export async function deleteMustahikLainnyaAction(_: any, formData: FormData): P
     revalidatePath("/distribusi-zakat-lainnya");
     return {
       message: "Mustahik lainnya berhasil dihapus",
-      statusMessage: "error",
+      statusMessage: "success", // Changed from "error" to "success"
     };
   } catch (error) {
     return renderError(error);

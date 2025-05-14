@@ -169,11 +169,11 @@ export default function LaporanPengumpulanClient({ totalMuzakki, totalJiwa, tota
       </div>
 
       {/* Tabel Detail Pengumpulan */}
-      <div className="bg-white p-6 rounded-lg shadow-md overflow-x-auto">
+      <div className=" p-6 rounded-lg shadow-md overflow-x-auto dark:border-2">
         <h2 className="text-xl font-bold mb-4">Detail Pengumpulan Zakat</h2>
         <table className="w-full border-collapse">
           <thead>
-            <tr className="bg-gray-100">
+            <tr className="bg-gray-100 dark:bg-muted">
               <th className="border px-4 py-2">No.</th>
               <th className="border px-4 py-2">Nama Muzakki</th>
               <th className="border px-4 py-2">Jumlah Tanggungan</th>
@@ -192,7 +192,7 @@ export default function LaporanPengumpulanClient({ totalMuzakki, totalJiwa, tota
               </tr>
             ) : (
               bayarZakatList.map((item, i) => (
-                <tr key={item.id} className={i % 2 === 0 ? "bg-white" : "bg-gray-50"}>
+                <tr key={item.id} className={i % 2 === 0 ? "bg-white dark:bg-muted" : "bg-gray-50 dark:bg-muted"}>
                   <td className="border px-4 py-2 text-center">{i + 1}</td>
                   <td className="border px-4 py-2">{item.muzakki.nama_muzakki}</td>
                   <td className="border px-4 py-2 text-center">{item.jumlah_tanggungan}</td>
@@ -204,7 +204,7 @@ export default function LaporanPengumpulanClient({ totalMuzakki, totalJiwa, tota
               ))
             )}
             {/* Baris Total Footer */}
-            <tr className="bg-gray-100 font-bold">
+            <tr className="bg-gray-100 font-bold dark:bg-muted">
               <td className="border px-4 py-2" colSpan={2}>
                 TOTAL
               </td>

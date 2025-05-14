@@ -1,11 +1,10 @@
 "use client";
 
-import { BarChart2, Building2, Folder, Settings, HelpCircle, Menu } from "lucide-react";
+import { BarChart2, Building2, Folder, Menu } from "lucide-react";
 
 import { Home } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import Image from "next/image";
 
 export default function Sidebar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -42,9 +41,14 @@ export default function Sidebar() {
         <div className="h-full flex flex-col">
           <Link href="https://kokonutui.com/" target="_blank" rel="noopener noreferrer" className="h-16 px-6 flex items-center border-b border-gray-200 dark:border-[#1F1F23]">
             <div className="flex items-center gap-3">
-              <Image src="https://kokonutui.com/logo.svg" alt="Acme" width={32} height={32} className="flex-shrink-0 hidden dark:block" />
-              <Image src="https://kokonutui.com/logo-black.svg" alt="Acme" width={32} height={32} className="flex-shrink-0 block dark:hidden" />
-              <span className="text-lg font-semibold hover:cursor-pointer text-gray-900 dark:text-white">KokonutUI</span>
+              <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 shadow-lg mb-2">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                  <path d="M2 17l10 5 10-5"></path>
+                  <path d="M2 12l10 5 10-5"></path>
+                </svg>
+              </div>
+              <span className="text-lg font-semibold hover:cursor-pointer text-gray-900 dark:text-white">ZakatFlow</span>
             </div>
           </Link>
 
@@ -79,17 +83,6 @@ export default function Sidebar() {
                   </NavItem>
                 </div>
               </div>
-            </div>
-          </div>
-
-          <div className="px-4 py-4 border-t border-gray-200 dark:border-[#1F1F23]">
-            <div className="space-y-1">
-              <NavItem href="#" icon={Settings}>
-                Settings
-              </NavItem>
-              <NavItem href="#" icon={HelpCircle}>
-                Help
-              </NavItem>
             </div>
           </div>
         </div>
