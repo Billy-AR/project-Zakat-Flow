@@ -16,6 +16,7 @@ interface BreadcrumbItem {
 export default function TopNav() {
   const { user } = useUser();
   const imageUrl = user?.imageUrl;
+  const userEmail = user?.emailAddresses[0].emailAddress;
   const breadcrumbs: BreadcrumbItem[] = [
     { label: "ZakatFlow", href: "#" },
     { label: "dashboard", href: "#" },
@@ -52,7 +53,7 @@ export default function TopNav() {
             />
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" sideOffset={8} className="w-[280px] sm:w-80 bg-background border-border rounded-lg shadow-lg">
-            <Profile01 avatar={imageUrl} />
+            <Profile01 avatar={imageUrl} name={userEmail || "User"} />
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
