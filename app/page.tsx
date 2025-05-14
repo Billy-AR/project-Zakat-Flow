@@ -36,7 +36,9 @@ export default function AuthPage() {
 
   return (
     <>
-      <SplashCursor />
+      <div className="md:block hidden">
+        <SplashCursor />
+      </div>
       <div className="flex min-h-screen items-center justify-center bg-white">
         {/* Subtle background patterns */}
         <div className="absolute inset-0 overflow-hidden opacity-5">
