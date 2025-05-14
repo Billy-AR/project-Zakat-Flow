@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 // app/dashboard/laporan/page.tsx
 import db from "@/utils/db";
 import LaporanPengumpulanClient from "@/components/laporan/LaporanPengumpulan";

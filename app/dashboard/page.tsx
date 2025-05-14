@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import db from "@/utils/db";
 import DashboardClient from "@/components/MainDashboard/dashboard";
 

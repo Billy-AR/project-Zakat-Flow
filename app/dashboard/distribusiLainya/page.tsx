@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import MustahikLainnyaClient from "@/components/muzakki/distribusiLainya/DistribusiLainya";
 import { getMustahikLainnyaList, getKategoriListAsc } from "@/utils/actions";
 

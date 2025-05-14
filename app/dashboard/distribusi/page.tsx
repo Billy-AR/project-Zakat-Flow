@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import MustahikWargaClient from "@/components/muzakki/distribusi/DistribusiWarga";
 import { getMustahikWargaList, getMuzakkiNameList, getKategoriListAsc } from "@/utils/actions";
 

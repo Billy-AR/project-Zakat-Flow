@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { getMuzakkiList } from "@/utils/actions";
 import MuzakkiClient from "@/components/muzakki/client";
 

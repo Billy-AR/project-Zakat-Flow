@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import LaporanDistribusiClient from "@/components/laporanDistribusi/LaporanDistribusiClient";
 import { getMustahikWargaKategori, getMustahikLainnyaListIncl, getKategoriList } from "@/utils/actions";
 export default async function LaporanDistribusiPage() {
