@@ -61,7 +61,7 @@ export default function MustahikWargaClient({ mustahikWargaList, muzakkiList, ka
   }));
 
   // Function to handle form submission with validation
-  const handleFormSubmit = async (_: any, formData: FormData): Promise<{ message: string; statusMessage: statusMessage }> => {
+  const handleFormSubmit = async (_: unknown, formData: FormData): Promise<{ message: string; statusMessage: statusMessage }> => {
     // Ensure form fields have values before submission
     const muzakkiId = formData.get("muzakkiId");
     const nama = formData.get("nama");

@@ -53,7 +53,7 @@ export default function MustahikLainnyaClient({ mustahikLainnyaList, kategoriLis
   }));
 
   // Function to handle form submission with validation
-  const handleFormSubmit = async (_: any, formData: FormData): Promise<{ message: string; statusMessage: statusMessage }> => {
+  const handleFormSubmit = async (_: unknown, formData: FormData): Promise<{ message: string; statusMessage: statusMessage }> => {
     // Ensure form fields have values before submission
     const nama = formData.get("nama");
     const kategoriId = formData.get("kategoriId");
