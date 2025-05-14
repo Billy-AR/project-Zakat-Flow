@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import BayarZakatClient from "@/components/muzakki/pengumpulanZakat/PengumpulanZakat";
 import { getBayarZakatList, getMuzakkiNameList } from "@/utils/actions";
 
