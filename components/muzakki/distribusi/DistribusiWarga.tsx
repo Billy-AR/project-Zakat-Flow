@@ -1,23 +1,27 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Plus, Pencil, Trash2, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import FormContainer from "@/components/Form/FormContainer";
-import FormInput from "@/components/Form/FormInput";
-import FormNumber from "@/components/Form/FormNumber";
-import FormSelect from "@/components/Form/FormSelect";
 import { createMustahikWargaAction, updateMustahikWargaAction, deleteMustahikWargaAction } from "@/utils/actions";
-import { MustahikWarga, Muzakki, KategoriMustahik, statusMessage } from "@/lib/types";
+import type { MustahikWarga, Muzakki, KategoriMustahik } from "@/lib/types";
+import { formatTanggal } from "@/lib/date";
+
+// Tipe untuk MustahikWarga dengan relasi
+type MustahikWargaWithRelations = MustahikWarga & {
+  muzakki: Muzakki;
+  kategori: KategoriMustahik;
+};
 
 interface MustahikWargaPageProps {
-  mustahikWargaList: (MustahikWarga & {
-    muzakki: Muzakki;
-    kategori: KategoriMustahik;
-  })[];
+  mustahikWargaList: MustahikWargaWithRelations[];
   muzakkiList: Muzakki[];
   kategoriList: KategoriMustahik[];
 }
@@ -27,70 +31,74 @@ export default function MustahikWargaClient({ mustahikWargaList, muzakkiList, ka
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
-  const [selectedMustahik, setSelectedMustahik] = useState<
-    | (MustahikWarga & {
-        muzakki: Muzakki;
-        kategori: KategoriMustahik;
-      })
-    | null
-  >(null);
+  const [selectedMustahik, setSelectedMustahik] = useState<MustahikWargaWithRelations | null>(null);
 
-  const handleEditClick = (mustahik: MustahikWarga & { muzakki: Muzakki; kategori: KategoriMustahik }) => {
+  // State untuk form add
+  const [selectedKategoriId, setSelectedKategoriId] = useState<string>("");
+  const [jumlahHak, setJumlahHak] = useState<string>("0");
+
+  // State untuk form edit
+  const [editSelectedKategoriId, setEditSelectedKategoriId] = useState<string>("");
+  const [editJumlahHak, setEditJumlahHak] = useState<string>("0");
+
+  // Update jumlah hak ketika kategori dipilih (form add)
+  useEffect(() => {
+    if (selectedKategoriId) {
+      const kategori = kategoriList.find((k) => k.id === selectedKategoriId);
+      if (kategori) {
+        setJumlahHak(kategori.jumlah_hak.toString());
+      }
+    }
+  }, [selectedKategoriId, kategoriList]);
+
+  // Update jumlah hak ketika kategori dipilih (form edit)
+  useEffect(() => {
+    if (editSelectedKategoriId) {
+      const kategori = kategoriList.find((k) => k.id === editSelectedKategoriId);
+      if (kategori) {
+        setEditJumlahHak(kategori.jumlah_hak.toString());
+      }
+    }
+  }, [editSelectedKategoriId, kategoriList]);
+
+  const handleEditClick = (mustahik: MustahikWargaWithRelations) => {
     setSelectedMustahik(mustahik);
+    setEditSelectedKategoriId(mustahik.kategoriId);
+    setEditJumlahHak(mustahik.hak.toString());
     setIsEditOpen(true);
   };
 
-  const handleDeleteClick = (mustahik: MustahikWarga & { muzakki: Muzakki; kategori: KategoriMustahik }) => {
+  const handleDeleteClick = (mustahik: MustahikWargaWithRelations) => {
     setSelectedMustahik(mustahik);
     setIsDeleteOpen(true);
   };
 
-  const handleDetailClick = (mustahik: MustahikWarga & { muzakki: Muzakki; kategori: KategoriMustahik }) => {
+  const handleDetailClick = (mustahik: MustahikWargaWithRelations) => {
     setSelectedMustahik(mustahik);
     setIsDetailOpen(true);
   };
 
-  const muzakkiOptions = muzakkiList.map((muzakki) => ({
-    labelItem: muzakki.nama_muzakki,
-    valueItem: muzakki.id,
-  }));
-
-  const kategoriOptions = kategoriList.map((kategori) => ({
-    labelItem: kategori.nama_kategori,
-    valueItem: kategori.id,
-  }));
-
-  // Function to handle form submission with validation
-  const handleFormSubmit = async (_: unknown, formData: FormData): Promise<{ message: string; statusMessage: statusMessage }> => {
-    // Ensure form fields have values before submission
-    const muzakkiId = formData.get("muzakkiId");
-    const nama = formData.get("nama");
-    const kategoriId = formData.get("kategoriId");
-    const hakValue = formData.get("hak");
-
-    // Validate required fields
-    if (!muzakkiId || !nama || !kategoriId || !hakValue) {
-      // Don't submit if any required field is missing
-      return { message: "Semua field harus diisi dengan benar", statusMessage: "error" };
+  const handleAddOpenChange = (open: boolean) => {
+    setIsAddOpen(open);
+    if (!open) {
+      setSelectedKategoriId("");
+      setJumlahHak("0");
     }
+  };
 
-    // Ensure hak is a valid number
-    const hak = parseFloat(hakValue as string);
-    if (isNaN(hak)) {
-      return { message: "Jumlah hak harus berupa angka", statusMessage: "error" };
+  const handleEditOpenChange = (open: boolean) => {
+    setIsEditOpen(open);
+    if (!open) {
+      setEditSelectedKategoriId("");
+      setEditJumlahHak("0");
     }
-
-    // If validation passes, submit the form
-    const result = await createMustahikWargaAction("", formData);
-    setIsAddOpen(false);
-    return result;
   };
 
   return (
     <div className="container mx-auto py-6">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Distribusi Zakat Fitrah Warga</h1>
-        <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
+        <Dialog open={isAddOpen} onOpenChange={handleAddOpenChange}>
           <DialogTrigger asChild>
             <Button>
               <Plus className="mr-2 h-4 w-4" />
@@ -102,15 +110,45 @@ export default function MustahikWargaClient({ mustahikWargaList, muzakkiList, ka
               <DialogTitle>Tambah Mustahik Warga</DialogTitle>
               <DialogDescription>Isi formulir berikut untuk menambahkan data mustahik warga.</DialogDescription>
             </DialogHeader>
-            <FormContainer action={handleFormSubmit} submitBtn>
+            <FormContainer action={createMustahikWargaAction} submitBtn>
               <div className="space-y-4 py-4">
-                <FormSelect name="muzakkiId" label="Pilih Muzakki/Warga" placeholder="Pilih warga sebagai mustahik" selectLabel="Muzakki/Warga" items={muzakkiOptions} required />
+                <div>
+                  <Label htmlFor="muzakkiId">Pilih Muzakki/Warga</Label>
+                  <Select name="muzakkiId">
+                    <SelectTrigger>
+                      <SelectValue placeholder="Pilih warga sebagai mustahik" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {muzakkiList.map((muzakki) => (
+                        <SelectItem key={muzakki.id} value={muzakki.id}>
+                          {muzakki.nama_muzakki}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
 
-                <FormInput type="text" name="nama" label="Nama Mustahik" placeholder="Masukkan nama mustahik" required />
+                <div>
+                  <Label htmlFor="kategoriId">Kategori Mustahik</Label>
+                  <Select name="kategoriId" value={selectedKategoriId} onValueChange={setSelectedKategoriId}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Pilih kategori mustahik" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {kategoriList.map((kategori) => (
+                        <SelectItem key={kategori.id} value={kategori.id}>
+                          {kategori.nama_kategori} ({kategori.jumlah_hak} kg)
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
 
-                <FormSelect name="kategoriId" label="Kategori Mustahik" placeholder="Pilih kategori mustahik" selectLabel="Kategori" items={kategoriOptions} required />
-
-                <FormNumber name="hak" label="Jumlah Hak (Kg)" placeholder="Masukkan jumlah hak dalam kg" required min={0} step={0.1} defaultValue={0} />
+                <div>
+                  <Label htmlFor="hak">Jumlah Hak (kg)</Label>
+                  <Input type="number" name="hak" value={jumlahHak} step="0.1" readOnly />
+                  <p className="text-sm text-muted-foreground mt-1">Otomatis terisi sesuai kategori yang dipilih</p>
+                </div>
               </div>
             </FormContainer>
           </DialogContent>
@@ -134,11 +172,9 @@ export default function MustahikWargaClient({ mustahikWargaList, muzakkiList, ka
               <CardContent>
                 <div className="space-y-2">
                   <p className="text-sm">
-                    <span className="font-medium">Warga/Muzakki:</span> {mustahik.muzakki.nama_muzakki}
-                  </p>
-                  <p className="text-sm">
                     <span className="font-medium">Jumlah Hak:</span> {mustahik.hak} kg
                   </p>
+                  <p className="text-xs text-muted-foreground">{formatTanggal(mustahik.createdAt)}</p>
                 </div>
               </CardContent>
               <CardFooter>
@@ -163,7 +199,7 @@ export default function MustahikWargaClient({ mustahikWargaList, muzakkiList, ka
       </div>
 
       {/* Edit Dialog */}
-      <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
+      <Dialog open={isEditOpen} onOpenChange={handleEditOpenChange}>
         <DialogContent className="sm:max-w-[550px]">
           <DialogHeader>
             <DialogTitle>Edit Mustahik Warga</DialogTitle>
@@ -173,13 +209,43 @@ export default function MustahikWargaClient({ mustahikWargaList, muzakkiList, ka
             <FormContainer action={updateMustahikWargaAction} submitBtn>
               <input type="hidden" name="id" value={selectedMustahik.id} />
               <div className="space-y-4 py-4">
-                <FormSelect name="muzakkiId" label="Pilih Muzakki/Warga" placeholder="Pilih warga sebagai mustahik" selectLabel="Muzakki/Warga" items={muzakkiOptions} required defaultValue={selectedMustahik.muzakkiId} />
+                <div>
+                  <Label htmlFor="muzakkiId">Pilih Muzakki/Warga</Label>
+                  <Select name="muzakkiId" defaultValue={selectedMustahik.muzakkiId}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {muzakkiList.map((muzakki) => (
+                        <SelectItem key={muzakki.id} value={muzakki.id}>
+                          {muzakki.nama_muzakki}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
 
-                <FormInput type="text" name="nama" label="Nama Mustahik" placeholder="Masukkan nama mustahik" required defaultValue={selectedMustahik.nama} />
+                <div>
+                  <Label htmlFor="kategoriId">Kategori Mustahik</Label>
+                  <Select name="kategoriId" value={editSelectedKategoriId} onValueChange={setEditSelectedKategoriId}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {kategoriList.map((kategori) => (
+                        <SelectItem key={kategori.id} value={kategori.id}>
+                          {kategori.nama_kategori} ({kategori.jumlah_hak} kg)
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
 
-                <FormSelect name="kategoriId" label="Kategori Mustahik" placeholder="Pilih kategori mustahik" selectLabel="Kategori" items={kategoriOptions} required defaultValue={selectedMustahik.kategoriId} />
-
-                <FormNumber name="hak" label="Jumlah Hak (Kg)" placeholder="Masukkan jumlah hak dalam kg" required min={0} step={0.1} defaultValue={selectedMustahik.hak} />
+                <div>
+                  <Label htmlFor="hak">Jumlah Hak (kg)</Label>
+                  <Input type="number" name="hak" value={editJumlahHak} step="0.1" readOnly />
+                  <p className="text-sm text-muted-foreground mt-1">Otomatis terisi sesuai kategori yang dipilih</p>
+                </div>
               </div>
             </FormContainer>
           )}
@@ -224,10 +290,6 @@ export default function MustahikWargaClient({ mustahikWargaList, muzakkiList, ka
                 <p className="text-sm">{selectedMustahik.nama}</p>
               </div>
               <div>
-                <h4 className="text-sm font-medium">Warga/Muzakki</h4>
-                <p className="text-sm">{selectedMustahik.muzakki.nama_muzakki}</p>
-              </div>
-              <div>
                 <h4 className="text-sm font-medium">Kategori</h4>
                 <p className="text-sm">{selectedMustahik.kategori.nama_kategori}</p>
               </div>
@@ -237,7 +299,7 @@ export default function MustahikWargaClient({ mustahikWargaList, muzakkiList, ka
               </div>
               <div>
                 <h4 className="text-sm font-medium">Tanggal Distribusi</h4>
-                <p className="text-sm">{new Date(selectedMustahik.createdAt).toLocaleString()}</p>
+                <p className="text-sm">{formatTanggal(selectedMustahik.createdAt)}</p>
               </div>
               <div>
                 <h4 className="text-sm font-medium">Terakhir Diperbarui</h4>

@@ -20,8 +20,6 @@ const kategoriSchema = z.object({
 
 const bayarZakatSchema = z.object({
   muzakkiId: z.string().min(1, "Muzakki harus dipilih"),
-  nama_KK: z.string().min(1, "Nama KK harus diisi"),
-  jumlah_tanggungan: z.coerce.number().min(1, "Jumlah tanggungan minimal 1"),
   jenis_bayar: z.enum(["BERAS", "UANG"], {
     required_error: "Jenis bayar harus dipilih",
   }),
@@ -32,7 +30,6 @@ const bayarZakatSchema = z.object({
 
 const mustahikWargaSchema = z.object({
   muzakkiId: z.string().min(1, "Muzakki harus dipilih"),
-  nama: z.string().min(1, "Nama harus diisi"),
   kategoriId: z.string().min(1, "Kategori harus dipilih"),
   hak: z.coerce.number().min(0, "Hak tidak boleh negatif"),
 });
@@ -264,13 +261,25 @@ export async function createBayarZakatAction(_: any, formData: FormData): Promis
   }
 
   try {
+    // Ambil data muzakki untuk mendapatkan nama dan jumlah tanggungan
+    const muzakki = await db.muzakki.findUnique({
+      where: { id: validation.data.muzakkiId },
+    });
+
+    if (!muzakki) {
+      return {
+        message: "Muzakki tidak ditemukan",
+        statusMessage: "error",
+      };
+    }
+
     const jenisBayar = validation.data.jenis_bayar;
 
     await db.bayarZakat.create({
       data: {
         muzakkiId: validation.data.muzakkiId,
-        nama_KK: validation.data.nama_KK,
-        jumlah_tanggungan: validation.data.jumlah_tanggungan,
+        nama_KK: muzakki.nama_muzakki, // Otomatis dari nama muzakki
+        jumlah_tanggungan: muzakki.jumlah_tanggungan, // Otomatis dari data muzakki
         jenis_bayar: jenisBayar,
         jumlah_tanggunganYangDibayar: validation.data.jumlah_tanggunganYangDibayar,
         bayar_beras: jenisBayar === "BERAS" ? validation.data.bayar_beras : null,
@@ -310,6 +319,7 @@ export async function getMuzakkiNameList() {
   return muzakkiList;
 }
 
+// Update updateBayarZakatAction dengan logika yang sama
 export async function updateBayarZakatAction(_: any, formData: FormData): Promise<{ message: string; statusMessage: statusMessage }> {
   const id = formData.get("id") as string;
   const validation = await validateForm(bayarZakatSchema, formData);
@@ -322,14 +332,26 @@ export async function updateBayarZakatAction(_: any, formData: FormData): Promis
   }
 
   try {
+    // Ambil data muzakki untuk mendapatkan nama dan jumlah tanggungan
+    const muzakki = await db.muzakki.findUnique({
+      where: { id: validation.data.muzakkiId },
+    });
+
+    if (!muzakki) {
+      return {
+        message: "Muzakki tidak ditemukan",
+        statusMessage: "error",
+      };
+    }
+
     const jenisBayar = validation.data.jenis_bayar;
 
     await db.bayarZakat.update({
       where: { id },
       data: {
         muzakkiId: validation.data.muzakkiId,
-        nama_KK: validation.data.nama_KK,
-        jumlah_tanggungan: validation.data.jumlah_tanggungan,
+        nama_KK: muzakki.nama_muzakki, // Otomatis dari nama muzakki
+        jumlah_tanggungan: muzakki.jumlah_tanggungan, // Otomatis dari data muzakki
         jenis_bayar: jenisBayar,
         jumlah_tanggunganYangDibayar: validation.data.jumlah_tanggunganYangDibayar,
         bayar_beras: jenisBayar === "BERAS" ? validation.data.bayar_beras : null,
@@ -365,21 +387,34 @@ export async function deleteBayarZakatAction(_: any, formData: FormData): Promis
   }
 }
 // ===== MUSTAHIK WARGA ACTIONS =====
+// Update createMustahikWargaAction
 export async function createMustahikWargaAction(_: any, formData: FormData): Promise<{ message: string; statusMessage: statusMessage }> {
   const validation = await validateForm(mustahikWargaSchema, formData);
 
   if (!validation.success) {
     return {
-      message: validation.error || "invalid input",
+      message: validation.error || "Invalid input",
       statusMessage: "error",
     };
   }
 
   try {
+    // Ambil data muzakki untuk mendapatkan nama
+    const muzakki = await db.muzakki.findUnique({
+      where: { id: validation.data.muzakkiId },
+    });
+
+    if (!muzakki) {
+      return {
+        message: "Muzakki tidak ditemukan",
+        statusMessage: "error",
+      };
+    }
+
     await db.mustahikWarga.create({
       data: {
         muzakkiId: validation.data.muzakkiId,
-        nama: validation.data.nama,
+        nama: muzakki.nama_muzakki, // Otomatis dari nama muzakki
         kategoriId: validation.data.kategoriId,
         hak: validation.data.hak,
       },
@@ -433,11 +468,23 @@ export async function updateMustahikWargaAction(_: any, formData: FormData): Pro
   }
 
   try {
+    // Ambil data muzakki untuk mendapatkan nama
+    const muzakki = await db.muzakki.findUnique({
+      where: { id: validation.data.muzakkiId },
+    });
+
+    if (!muzakki) {
+      return {
+        message: "Muzakki tidak ditemukan",
+        statusMessage: "error",
+      };
+    }
+
     await db.mustahikWarga.update({
       where: { id },
       data: {
         muzakkiId: validation.data.muzakkiId,
-        nama: validation.data.nama,
+        nama: muzakki.nama_muzakki, // Otomatis dari nama muzakki
         kategoriId: validation.data.kategoriId,
         hak: validation.data.hak,
       },
