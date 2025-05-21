@@ -1,36 +1,72 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Next.js with TypeScript & NeonDB
 
-## Getting Started
+A simple project using **Next.js**, **TypeScript**, and **NeonDB** for serverless PostgreSQL database.
 
-First, run the development server:
+## Prerequisites
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Node.js** (v14.x or higher) - [Install Node.js](https://nodejs.org/)
+- **npm** (v7.x or higher) or **yarn** - [Install npm](https://www.npmjs.com/) or [Install Yarn](https://yarnpkg.com/)
+- **NeonDB** account - [Sign Up on NeonDB](https://neon.tech)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Installation
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. **Clone the repository**:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+    ```bash
+    git clone https://github.com/username/repository-name.git
+    cd repository-name
+    ```
 
-## Learn More
+2. **Install dependencies**:
 
-To learn more about Next.js, take a look at the following resources:
+    Using **npm**:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+    ```bash
+    npm install
+    ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+    Using **yarn**:
 
-## Deploy on Vercel
+    ```bash
+    yarn install
+    ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+3. **Set up environment variables**:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+    Create a `.env` file in the root directory and add the `DATABASE_URL`:
+
+    ```bash
+    DATABASE_URL=your_neondb_connection_string
+    ```
+
+4. **Run the application**:
+
+    Using **npm**:
+
+    ```bash
+    npm run dev
+    ```
+
+    Using **yarn**:
+
+    ```bash
+    yarn dev
+    ```
+
+    Your app should now be running at [http://localhost:3000](http://localhost:3000).
+
+---
+
+## Deployment
+
+Deploy your app to **Vercel**:
+
+1. Connect your GitHub repository to **Vercel**.
+2. Add the `DATABASE_URL` in the **Vercel environment variables** settings.
+3. Click "Deploy" to go live.
+
+---
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
