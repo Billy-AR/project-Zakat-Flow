@@ -1,7 +1,6 @@
-# Next.js dengan TypeScript & NeonDB
+# Zakat-Flow
 
-![Logo](https://your-logo-url.com/logo.png)  
-*Template Aplikasi Modern dengan Next.js, TypeScript, dan NeonDB*  
+
 
 Proyek ini menggunakan **Next.js**, **TypeScript**, dan **NeonDB** untuk database PostgreSQL yang dapat diskalakan dan serverless.
 
