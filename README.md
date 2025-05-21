@@ -1,72 +1,74 @@
-# Next.js with TypeScript & NeonDB
+# Next.js dengan TypeScript & NeonDB
 
-A simple project using **Next.js**, **TypeScript**, and **NeonDB** for serverless PostgreSQL database.
+Proyek sederhana menggunakan **Next.js**, **TypeScript**, dan **NeonDB** untuk database PostgreSQL serverless.
 
-## Prerequisites
+## Prasyarat
 
-- **Node.js** (v14.x or higher) - [Install Node.js](https://nodejs.org/)
-- **npm** (v7.x or higher) or **yarn** - [Install npm](https://www.npmjs.com/) or [Install Yarn](https://yarnpkg.com/)
-- **NeonDB** account - [Sign Up on NeonDB](https://neon.tech)
+Pastikan Anda telah menginstal perangkat lunak berikut:
 
-## Installation
+- **Node.js** (v14.x atau lebih tinggi) - [Install Node.js](https://nodejs.org/)
+- **npm** (v7.x atau lebih tinggi) atau **yarn** - [Install npm](https://www.npmjs.com/) atau [Install Yarn](https://yarnpkg.com/)
+- **NeonDB** akun - [Daftar NeonDB](https://neon.tech)
 
-1. **Clone the repository**:
+## Instalasi
+
+1. **Clone repositori**:
 
     ```bash
-    git clone https://github.com/username/repository-name.git
-    cd repository-name
+    git clone https://github.com/username/nama-repositori.git
+    cd nama-repositori
     ```
 
-2. **Install dependencies**:
+2. **Install dependensi**:
 
-    Using **npm**:
+    Menggunakan **npm**:
 
     ```bash
     npm install
     ```
 
-    Using **yarn**:
+    Menggunakan **yarn**:
 
     ```bash
     yarn install
     ```
 
-3. **Set up environment variables**:
+3. **Setel variabel lingkungan**:
 
-    Create a `.env` file in the root directory and add the `DATABASE_URL`:
+    Buat file `.env` di direktori root dan tambahkan `DATABASE_URL`:
 
     ```bash
     DATABASE_URL=your_neondb_connection_string
     ```
 
-4. **Run the application**:
+4. **Jalankan aplikasi**:
 
-    Using **npm**:
+    Menggunakan **npm**:
 
     ```bash
     npm run dev
     ```
 
-    Using **yarn**:
+    Menggunakan **yarn**:
 
     ```bash
     yarn dev
     ```
 
-    Your app should now be running at [http://localhost:3000](http://localhost:3000).
+    Aplikasi Anda akan berjalan di [http://localhost:3000](http://localhost:3000).
 
 ---
 
-## Deployment
+## Penyebaran
 
-Deploy your app to **Vercel**:
+Untuk menyebarkan aplikasi ke **Vercel**:
 
-1. Connect your GitHub repository to **Vercel**.
-2. Add the `DATABASE_URL` in the **Vercel environment variables** settings.
-3. Click "Deploy" to go live.
+1. Hubungkan repositori GitHub Anda ke **Vercel**.
+2. Tambahkan `DATABASE_URL` pada **variabel lingkungan Vercel**.
+3. Klik "Deploy" untuk membuat aplikasi Anda online.
 
 ---
 
-## License
+## Lisensi
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+Proyek ini dilisensikan di bawah MIT License - lihat file [LICENSE](LICENSE) untuk detailnya.
