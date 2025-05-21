@@ -30,7 +30,7 @@ Ikuti langkah-langkah di bawah ini untuk menyiapkan proyek di mesin lokal Anda:
 1. **Clone repositori**:
 
     ```bash
-    git clone https://github.com/username/nama-repositori.git
+    git clone https://github.com/Billy-AR/project-Zakat-Flow.git
     cd nama-repositori
     ```
 
@@ -70,8 +70,6 @@ Ikuti langkah-langkah di bawah ini untuk menyiapkan proyek di mesin lokal Anda:
     yarn dev
     ```
 
-    Aplikasi Anda akan berjalan di [http://localhost:3000](http://localhost:3000).
-
 ---
 
 ## 🌐 Penyebaran
@@ -84,13 +82,3 @@ Untuk menyebarkan aplikasi ke **Vercel**:
 
 ---
 
-## 🎨 Menambahkan Animasi dengan Framer Motion
-
-Tambahkan animasi halus pada aplikasi Anda menggunakan **Framer Motion**. Berikut adalah contoh untuk menambahkan animasi **fade-in** pada halaman:
-
-### 1. Instal Framer Motion
-
-Instal **Framer Motion**:
-
-```bash
-npm install framer-motion
