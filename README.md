@@ -2,7 +2,7 @@
 
 
 
-Proyek ini menggunakan **Next.js**, **TypeScript**, dan **NeonDB** untuk database PostgreSQL yang dapat diskalakan dan serverless.
+Proyek ini menggunakan **Next.js**, **TypeScript**, dan **NeonDB**  yang dapat diskalakan dan serverless.
 
 ## 🚀 Fitur Utama
 
